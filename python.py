@@ -21,24 +21,131 @@ def get_db_connection():
     return mysql.connector.connect(**db_config)
 
 
-# Render Home Page
-@app.route("/")
-def game_page():
-    game_id = request.args.get('game_id', default=None, type=int)
+# Search Page
+@app.route("/", methods=["GET", "POST"])
+def search():
+    if request.method == "GET":
+
+        name = request.args.get('name', default = None , type = str)
+        year = request.args.get('year')
+        platform = request.args.get('platform', default = None , type = str)
+        genre = request.args.get('genre', default = None , type = str)
+        global_sales = request.args.get('global_sales', default = None , type = int)
+        critic_score = request.args.get('critic_score', default = None , type = int)
+        developer = request.args.get('developer', default = None , type = str)
+
+        # Connect to the database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+                       CREATE VIEW temp as
+                       SELECT * FROM Game_table games """)
+        if name:
+            cursor.execute("""
+                           CREATE VIEW temp1 as
+                           SELECT * FROM temp t
+                           WHERE t.Name = %s""" , (name,))
+        else:
+            cursor.execute("""
+                           CREATE VIEW temp1 as
+                           SELECT * FROM temp t""")
+            
+        # YEAR
+        # if year:
+        #     cursor.execute("""
+        #                    CREATE VIEW temp2 as
+        #                    SELECT * FROM temp1 t1
+        #                    WHERE temp1.year = %s""" , (year,))
+        # else:
+        #     cursor.execute("""
+        #                    CREATE VIEW temp2 as
+        #                    SELECT * FROM temp1""")
+            
+        # PLATFORM
+        if platform:
+            cursor.execute("""
+                           CREATE VIEW temp3 as
+                           SELECT * FROM temp2 t2 , Platform_table pt
+                           WHERE t2.Platform_ID = pt.Platform_ID AND pt.platform = %s""" , (platform,))
+        else:
+            cursor.execute("""
+                           CREATE VIEW temp3 as
+                           SELECT * FROM temp2 t2""")
+            
+        # GENRE
+        # if genre:
+        #     cursor.execute("""
+        #                    CREATE VIEW temp4 as
+        #                    SELECT * FROM temp3
+        #                    WHERE temp3.genre = %s""" , (genre,))
+        # else:
+        #     cursor.execute("""
+        #                    CREATE VIEW temp4 as
+        #                    SELECT * FROM temp3""")
+            
+        #GLOBAL_SALES
+        if global_sales:
+            cursor.execute("""
+                           CREATE VIEW temp5 as
+                           SELECT * FROM temp4 t4 , Sales_table st
+                           WHERE t4.Game_ID = st.Game_ID AND st.Global_sales >= %d""" , (global_sales,))
+        else:
+            cursor.execute("""
+                           CREATE VIEW temp5 as
+                           SELECT * FROM temp4" t4""")
+            
+        
+        #CRITIC_SCORE
+        if critic_score:
+            cursor.execute("""
+                           CREATE VIEW temp6 as
+                           SELECT * FROM temp5 t5 , Score_table sct
+                           WHERE t5.Game_ID = sct.Game_ID AND sct.Critic_score >= %d""" , (critic_score,))
+        else:
+            cursor.execute("""
+                           CREATE VIEW temp6 as
+                           SELECT * FROM temp5 t5""")
+            
+        # DEVELOPER
+        if developer:
+            cursor.execute("""
+                           CREATE VIEW temp7 as
+                           SELECT * FROM temp6 t6
+                           WHERE t6.Developer = %s""" , (developer,))
+        else:
+            cursor.execute("""
+                           CREATE VIEW temp7 as
+                           SELECT * FROM temp6 t6""")
+
+        
+        cursor.execute("SELECT * FROM temp7")
+
+        games = cursor.fetchall()
+
+        # Close the connection
+        cursor.close()
+        conn.close()
+
+    return render_template("search.html" , games = games)
+
+
+# Render Game Page
+@app.route("/game_page/<int:game_id>", methods=["GET"])
+def game_page(game_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    if game_id:
-        # Filter comments for the specified game_id
-        cursor.execute("SELECT * FROM comment_table WHERE game_id = %s", (game_id,))
-    else:
-        # Fetch all comments if no game_id is provided
-        cursor.execute("SELECT * FROM comment_table")
-
+    cursor.execute("SELECT * FROM comment_table WHERE game_id = %s", (game_id,))
     comments = cursor.fetchall()
+
+    cursor.execute("SELECT Name, Year, Platform FROM Game_table JOIN Platform_table ON Game_table.Platform_ID = Platform_table.Platform_ID WHERE Game_ID = %s", (game_id,))
+    game = cursor.fetchone()
+
     cursor.close()
     conn.close()
-    return render_template("page.html", comments=comments, selected_game_id=game_id)
+
+    return render_template("comment.html", comments=comments, game=game)
 
 
 # Create comment
