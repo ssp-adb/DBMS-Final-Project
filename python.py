@@ -12,7 +12,7 @@ db_config = {
     'host': 'localhost',  # Change this to your MySQL host
     'user': 'test',  # Change this to your MySQL username
     'password': '0000',  # Change this to your MySQL password
-    'database': 'test'  # Change this to your MySQL database name
+    'database': 'final_project'  # Change this to your MySQL database name
 }
 
 
@@ -39,91 +39,108 @@ def search():
         conn = get_db_connection()
         cursor = conn.cursor()
 
+        cursor.execute("DROP VIEW IF EXISTS temp")
         cursor.execute("""
                        CREATE VIEW temp as
-                       SELECT * FROM Game_table games """)
+                       SELECT * FROM game_table games """)
         if game_name:
+            cursor.execute("DROP VIEW IF EXISTS temp1")
             cursor.execute("""
                            CREATE VIEW temp1 as
                            SELECT * FROM temp t
                            WHERE Upper(t.game_name) = (%s)""" , (game_name,))
         else:
+            cursor.execute("DROP VIEW IF EXISTS temp1")
             cursor.execute("""
                            CREATE VIEW temp1 as
                            SELECT * FROM temp t""")
             
         #YEAR
         if year:
+            cursor.execute("DROP VIEW IF EXISTS temp2")
             cursor.execute("""
                            CREATE VIEW temp2 as
                            SELECT * FROM temp1 t1
                            WHERE t1.year = %d""" , (year,))
         else:
+            cursor.execute("DROP VIEW IF EXISTS temp2")
             cursor.execute("""
                            CREATE VIEW temp2 as
                            SELECT * FROM temp1 t1""")
             
         # PLATFORM
         if platform:
+            cursor.execute("DROP VIEW IF EXISTS temp3")
             cursor.execute("""
                            CREATE VIEW temp3 as
-                           SELECT * FROM temp2 t2 , Platform_table pt
+                           SELECT * FROM temp2 t2 , platform_table pt
                            WHERE t2.platform_ID = pt.platform_ID AND Upper(pt.platform) = Upper(%s)""" , (platform,))
         else:
+            cursor.execute("DROP VIEW IF EXISTS temp3")
             cursor.execute("""
                            CREATE VIEW temp3 as
                            SELECT * FROM temp2 t2""")
             
         #GENRE
         if genre:
+            cursor.execute("DROP VIEW IF EXISTS temp4")
             cursor.execute("""
                            CREATE VIEW temp4 as
                            SELECT * FROM temp3
                            WHERE Upper(temp3.genre) = Upper(%s)""" , (genre,))
         else:
+            cursor.execute("DROP VIEW IF EXISTS temp4")
             cursor.execute("""
                            CREATE VIEW temp4 as
                            SELECT * FROM temp3""")
             
         #GLOBAL_SALES
         if global_sales:
+            cursor.execute("DROP VIEW IF EXISTS temp5")
             cursor.execute("""
                            CREATE VIEW temp5 as
-                           SELECT * FROM temp4 t4 , Sales_table st
+                           SELECT * FROM temp4 t4 , sales_table st
                            WHERE t4.game_id = st.game_id AND st.global_sales >= %d""" , (global_sales,))
         else:
+            cursor.execute("DROP VIEW IF EXISTS temp5")
             cursor.execute("""
                            CREATE VIEW temp5 as
-                           SELECT * FROM temp4" t4""")
+                           SELECT * FROM temp4 t4""")
             
         #CRITIC_SCORE
         if critic_score:
+            cursor.execute("DROP VIEW IF EXISTS temp6")
             cursor.execute("""
                            CREATE VIEW temp6 as
-                           SELECT * FROM temp5 t5 , Score_table sct
+                           SELECT * FROM temp5 t5 , score_table sct
                            WHERE t5.game_id = sct.game_id AND sct.critic_score >= %d""" , (critic_score,))
         else:
+            cursor.execute("DROP VIEW IF EXISTS temp6")
             cursor.execute("""
                            CREATE VIEW temp6 as
                            SELECT * FROM temp5 t5""")
             
         # DEVELOPER
         if developer:
+            cursor.execute("DROP VIEW IF EXISTS temp7")
             cursor.execute("""
                            CREATE VIEW temp7 as
                            SELECT * FROM temp6 t6
                            WHERE Upper(t6.developer) = Upper(%s)""" , (developer,))
         else:
+            cursor.execute("DROP VIEW IF EXISTS temp7")
             cursor.execute("""
                            CREATE VIEW temp7 as
                            SELECT * FROM temp6 t6""")
         
         if user_score:
+            cursor.execute("DROP VIEW IF EXISTS temp8")
             cursor.execute("""
                            CREATE VIEW temp8 as
-                           SELECT * FROM temp7 t7 , Score_table sct
+                           SELECT * FROM temp7 t7 , score_table sct
                            WHERE t7.game_id = sct.game_id AND sct.user_score >= %d""" , (user_score,))
         else:
+            cursor.execute("DROP VIEW IF EXISTS temp8")
             cursor.execute("""
                            CREATE VIEW temp8 as
                            SELECT * FROM temp7 t7""")
@@ -137,7 +154,7 @@ def search():
         cursor.close()
         conn.close()
 
-    return render_template("test.html" , games = games)
+    return render_template("search.html" , games = games)
 
 
 # Render Game Page

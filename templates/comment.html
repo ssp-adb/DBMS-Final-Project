@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Comments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-bottom: 10px;
+        }
+        .comment {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>{{ game.game_name }}</h2>
+        <p>Year: {{ game.year }}</p>
+        <p>Platform: {{ game.platform }}</p>
+
+        <h3>Comments</h3>
+        <div>
+            {% if comments %}
+                {% for comment in comments %}
+                    <div class="comment">
+                        <p>{{ comment.comment_text }}</p>
+                        <form action="/edit_comment" method="post">
+                            <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
+                            <textarea name="comment_text">{{ comment.comment_text }}</textarea>
+                            <button type="submit">Edit</button>
+                        </form>
+                        <form action="/delete_comment" method="post">
+                            <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No comments available.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

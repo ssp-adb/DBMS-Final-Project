@@ -6,20 +6,31 @@ CREATE TABLE game_table (
     platform_id INT,
     rating VARCHAR(10)
 );
-LOAD DATA INFILE '/var/lib/mysql-files/game_table.csv' IGNORE INTO TABLE game_table FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES (game_id, publisher, developer, rating, game_id, platform_id);
+LOAD DATA LOCAL INFILE './data/game_table.csv' IGNORE INTO TABLE game_table
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' 
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES (game_id, publisher, developer, rating, game_id, platform_id);
+
 
 CREATE TABLE platform_table (
     platform_id INT PRIMARY KEY,
     platform_name VARCHAR(50)
 );
-LOAD DATA INFILE '/var/lib/mysql-files/platform_table.csv' IGNORE INTO TABLE platform_table FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY ' "' LINES TERMINATED BY ' \n' IGNORE 1 LINES (platform, platform_id);
+LOAD DATA LOCAL INFILE './data/platform_table.csv' IGNORE INTO TABLE platform_table 
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' 
+LINES TERMINATED BY '\n' 
+IGNORE 1 LINES (platform_id, platform_name);
 
 
 CREATE TABLE rating_table (
     rating VARCHAR(10) PRIMARY KEY,
     age INT
 );
-LOAD DATA INFILE '/var/lib/mysql-files/rating_table.csv' IGNORE INTO TABLE rating_table FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY ' "' LINES TERMINATED BY '\ \n' IGNORE 1 LINES (rating, age);
+LOAD DATA LOCAL INFILE './data/rating_table.csv' IGNORE INTO TABLE rating_table 
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' 
+LINES TERMINATED BY '\n' 
+IGNORE 1 LINES (rating, age);
+
 
 CREATE TABLE score_table (
     game_id INT PRIMARY KEY,
@@ -28,7 +39,11 @@ CREATE TABLE score_table (
     user_score FLOAT,
     user_count INT
 );
-LOAD DATA INFILE '/var/lib/mysql-files/score_table.csv' IGNORE INTO TABLE score_table FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY ' "' LINES TERMINATED BY ' \n' IGNORE 1 LINES (critic_score_score, critic_count, user_score, user_count, game_id);
+LOAD DATA LOCAL INFILE './data/score_table.csv' IGNORE INTO TABLE score_table 
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' 
+LINES TERMINATED BY '\n' 
+IGNORE 1 LINES (game_id, critic_score, critic_count, user_score, user_count);
+
 
 CREATE TABLE sales_table (
     game_id INT PRIMARY KEY,
@@ -38,7 +53,11 @@ CREATE TABLE sales_table (
     other_sales FLOAT,
     global_sales FLOAT
 );
-LOAD DATA INFILE '/var/lib/mysql-files/sales_table.csv' IGNORE INTO TABLE sales_table FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY ' "' LINES TERMINATED BY ' \n' IGNORE 1 LINES (na_sales, eu_sales, jp_sales, other_sales, global_sales, game_id);
+LOAD DATA LOCAL INFILE './data/sales_table.csv' IGNORE INTO TABLE sales_table
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES (game_id, na_sales, eu_sales, jp_sales, other_sales, global_sales);
+
 
 CREATE TABLE comment_table (
     comment_id INT AUTO_INCREMENT PRIMARY KEY,
