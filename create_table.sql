@@ -4,29 +4,31 @@ CREATE TABLE game_table (
     publisher VARCHAR(50),
     developer VARCHAR(200),
     platform_id INT,
-    rating VARCHAR(10)
+    rating VARCHAR(10),
+    year INT,
+    genre VARCHAR(50)
 );
 LOAD DATA LOCAL INFILE './data/game_table.csv' IGNORE INTO TABLE game_table
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' 
 LINES TERMINATED BY '\n'
-IGNORE 1 LINES (game_name, publisher, developer, rating, game_id, platform_id);
+IGNORE 1 LINES (game_name, publisher, developer, rating, game_id, platform_id, year, genre);
 
 
 CREATE TABLE platform_table (
     platform_id INT PRIMARY KEY,
-    platform_name VARCHAR(50)
+    platform VARCHAR(50)
 );
 LOAD DATA LOCAL INFILE './data/platform_table.csv' IGNORE INTO TABLE platform_table 
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' 
 LINES TERMINATED BY '\n' 
-IGNORE 1 LINES (platform_name, platform_id);
+IGNORE 1 LINES (platform, platform_id);
 
 
 CREATE TABLE rating_table (
     rating VARCHAR(10) PRIMARY KEY,
     age INT
 );
-LOAD DATA LOCAL INFILE './data/rating_table.csv' IGNORE INTO TABLE rating_table 
+LOAD DATA LOCAL INFILE './data/rating_table.csv' IGNORE INTO TABLE rating_table
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' 
 LINES TERMINATED BY '\n' 
 IGNORE 1 LINES (rating, age);
@@ -34,7 +36,7 @@ IGNORE 1 LINES (rating, age);
 
 CREATE TABLE score_table (
     game_id INT PRIMARY KEY,
-    critic_score FLOAT,
+    critic_score INT,
     critic_count INT,
     user_score FLOAT,
     user_count INT

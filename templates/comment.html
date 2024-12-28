@@ -42,12 +42,14 @@
                         <p>{{ comment.comment_text }}</p>
                         <form action="/edit_comment" method="post">
                             <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
-                            <textarea name="comment_text">{{ comment.comment_text }}</textarea>
-                            <button type="submit">Edit</button>
+							<input type="hidden" name="game_id" value="{{ comment.game_id }}">
+							<textarea name="comment_text">{{ comment.comment_text }}</textarea>
+							<button type="submit">Edit</button>
                         </form>
                         <form action="/delete_comment" method="post">
                             <input type="hidden" name="comment_id" value="{{ comment.comment_id }}">
-                            <button type="submit">Delete</button>
+							<input type="hidden" name="game_id" value="{{ comment.game_id }}">
+							<button type="submit">Delete</button>
                         </form>
                     </div>
                 {% endfor %}
@@ -55,6 +57,14 @@
                 <p>No comments available.</p>
             {% endif %}
         </div>
+		<!-- Add New Comment -->
+		<h2>Add a New Comment</h2>
+		<form action="/comment" method="post">
+			<input type="hidden" name="game_id" value="{{ game.game_id }}">
+			<label for="comment_text">Comment:</label>
+			<textarea id="comment_text" name="comment_text" rows="4" required></textarea>
+			<button type="submit">Add Comment</button>
+		</form>
     </div>
 </body>
 </html>
