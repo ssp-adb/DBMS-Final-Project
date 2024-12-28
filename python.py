@@ -43,6 +43,8 @@ def search():
         cursor.execute("""
                        CREATE VIEW temp as
                        SELECT * FROM game_table games """)
+        
+        # GAME_NAME
         if game_name:
             cursor.execute("DROP VIEW IF EXISTS temp1")
             cursor.execute("""
