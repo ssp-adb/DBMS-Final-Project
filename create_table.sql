@@ -9,8 +9,8 @@ CREATE TABLE game_table (
     genre VARCHAR(50)
 );
 LOAD DATA LOCAL INFILE './data/game_table.csv' IGNORE INTO TABLE game_table
-FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' 
-LINES TERMINATED BY '\n'
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 LINES (game_name, publisher, developer, rating, game_id, platform_id, year, genre);
 
 
@@ -20,7 +20,7 @@ CREATE TABLE platform_table (
 );
 LOAD DATA LOCAL INFILE './data/platform_table.csv' IGNORE INTO TABLE platform_table 
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' 
-LINES TERMINATED BY '\n' 
+LINES TERMINATED BY '\r\n'
 IGNORE 1 LINES (platform, platform_id);
 
 
@@ -30,7 +30,7 @@ CREATE TABLE rating_table (
 );
 LOAD DATA LOCAL INFILE './data/rating_table.csv' IGNORE INTO TABLE rating_table
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' 
-LINES TERMINATED BY '\n' 
+LINES TERMINATED BY '\r\n'
 IGNORE 1 LINES (rating, age);
 
 
@@ -43,7 +43,7 @@ CREATE TABLE score_table (
 );
 LOAD DATA LOCAL INFILE './data/score_table.csv' IGNORE INTO TABLE score_table 
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' 
-LINES TERMINATED BY '\n' 
+LINES TERMINATED BY '\r\n'
 IGNORE 1 LINES (critic_score, critic_count, user_score, user_count, game_id);
 
 
@@ -57,7 +57,7 @@ CREATE TABLE sales_table (
 );
 LOAD DATA LOCAL INFILE './data/sales_table.csv' IGNORE INTO TABLE sales_table
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
+LINES TERMINATED BY '\r\n'
 IGNORE 1 LINES (na_sales, eu_sales, jp_sales, other_sales, global_sales, game_id);
 
 

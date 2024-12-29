@@ -48,10 +48,11 @@ def search():
         # GAME_NAME
         cursor.execute("DROP VIEW IF EXISTS temp1")
         if game_name:
-            cursor.execute("""
+            game_name = game_name.upper()
+            cursor.execute(f"""
                            CREATE VIEW temp1 as
                            SELECT * FROM temp t
-                           WHERE Upper(t.game_name) = Upper(%s)""" , (game_name,))
+                           WHERE Upper(t.game_name) LIKE '%{game_name}%'""")
         else:
             cursor.execute("""
                            CREATE VIEW temp1 as
@@ -60,7 +61,6 @@ def search():
         #YEAR
         cursor.execute("DROP VIEW IF EXISTS temp2")
         if year:
-            
             cursor.execute("""
                            CREATE VIEW temp2 as
                            SELECT * FROM temp1 t1
@@ -68,7 +68,6 @@ def search():
                            ORDER BY t1.year DESC
                            """ , (year,))
         else:
-            cursor.execute("DROP VIEW IF EXISTS temp2")
             cursor.execute("""
                            CREATE VIEW temp2 as
                            SELECT * FROM temp1 t1
@@ -83,7 +82,7 @@ def search():
                            FROM temp2 t2
                            JOIN platform_table pt
                            ON t2.platform_id = pt.platform_id
-                           WHERE Upper(pt.platform) = Upper(%s)""" , (platform,))
+                           WHERE Upper(pt.platform) = Upper(%s)""", (platform,))
         else:
             cursor.execute("""
                            CREATE VIEW temp3 as
@@ -97,8 +96,8 @@ def search():
         if genre:
             cursor.execute("""
                            CREATE VIEW temp4 as
-                           SELECT * FROM temp3
-                           WHERE Upper(temp3.genre) = Upper(%s)""" , (genre,))
+                           SELECT * FROM temp3 t3
+                           WHERE t3.genre = %s""" , (genre,))
         else:
             cursor.execute("""
                            CREATE VIEW temp4 as
