@@ -10,8 +10,8 @@ CREATE TABLE game_table (
 );
 LOAD DATA LOCAL INFILE './data/game_table.csv' IGNORE INTO TABLE game_table
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
-LINES TERMINATED BY '\r\n'
-IGNORE 1 LINES (game_name, publisher, developer, rating, game_id, platform_id, year, genre);
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES (game_name, publisher, developer, platform_id, rating, year, genre, game_id);
 
 
 CREATE TABLE platform_table (
