@@ -65,7 +65,6 @@ def search():
                            CREATE VIEW temp2 as
                            SELECT * FROM temp1 t1
                            WHERE t1.year = %s
-                           ORDER BY t1.year DESC
                            """ , (year,))
         else:
             cursor.execute("""
